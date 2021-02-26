@@ -23,6 +23,7 @@ router.post("/login", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       role: user.role,
+      username: user.username,
     },
     "secret"
   );
