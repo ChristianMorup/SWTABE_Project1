@@ -8,6 +8,13 @@ const { hasRole } = require("../middleware/roleMiddleware");
 
 const isAdminFunc = hasRole(roles.Admin);
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Log in using username and password
+ *     description: Use credentials to log in. If successfull it returns a jwt which is valid for an hour
+ */
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
