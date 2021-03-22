@@ -1,8 +1,8 @@
 FROM node:latest
 
-WORKDIR /app
+WORKDIR /
 
-COPY . ./
+COPY . /
 RUN ls -la /
 
 RUN npm install
