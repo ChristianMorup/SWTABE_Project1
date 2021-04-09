@@ -19,3 +19,12 @@ services:
     build: .
     ports:
       - "3000:3000"
+  rabbitmq:
+    image: rabbitmq:3.8.14-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq/lib/:/var/lib/rabbitmq/
+      - ./rabbimq/log/:/var/log/rabbitmq

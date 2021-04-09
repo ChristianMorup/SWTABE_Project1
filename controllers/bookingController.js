@@ -6,6 +6,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const roles = require("../roles");
 const { hasRole } = require("../middleware/roleMiddleware");
+const { sendMessage } = require("../messageQueue");
 
 const isManagerFunc = hasRole(roles.Manager);
 
@@ -14,17 +15,7 @@ router.post("/:hotelName/room/:roomId", async (req, res) => {
   const { start, end } = req.body;
   const { hotelName, roomId } = req.params;
 
-  const booking = new Booking({
-    hotelName,
-    roomId,
-    start,
-    end,
-    user: req.user.username,
-  });
-
-  //Ideally extra validation if booking aldready exists
-
-  await booking.save();
+  sendMessage({ start, end, hotelName, roomId, user: req.user.username });
 
   return res.sendStatus(201);
 });

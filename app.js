@@ -9,6 +9,10 @@ const bookingController = require("./controllers/bookingController");
 
 require("./db");
 
+setTimeout(() => {
+  require("./messageQueue");
+}, 20000);
+
 const isAdminFunc = hasRole(roles.Admin);
 
 const swaggerDefinition = {
