@@ -1,10 +1,11 @@
 var mongoose = require("mongoose");
+const User = require("./models/user");
+const bcrypt = require("bcrypt");
+const roles = require("./roles");
 
 const url = process.env.MONGODB_URI
   ? process.env.MONGODB_URI
   : "mongodb://localhost:27017/project1";
-
-console.log(url);
 
 const gracefulShutdown = (msg, callback) => {
   mongoose.connection.close(() => {
@@ -27,8 +28,20 @@ async function main() {
   }
 }
 
-mongoose.connection.on("connected", () => {
+mongoose.connection.on("connected", async () => {
   console.log(`Mongoose connected to ${url}`);
+
+  if (await User.findOne().where("username").equals("admin")) return;
+
+  const hash = await bcrypt.hash("password", 10);
+
+  const user = new User({
+    username: "admin",
+    password: hash,
+    role: roles.Admin,
+  });
+
+  await user.save();
 });
 
 mongoose.connection.on("error", (err) => {

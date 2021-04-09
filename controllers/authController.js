@@ -10,10 +10,36 @@ const isAdminFunc = hasRole(roles.Admin);
 
 /**
  * @swagger
- * /login:
+ * /users/login:
  *   post:
  *     summary: Log in using username and password
  *     description: Use credentials to log in. If successfull it returns a jwt which is valid for an hour
+ *     responses:
+ *      200:
+ *        description: Login succesful
+ *        schema:
+ *          title: Token object
+ *          type: object
+ *          items:
+ *            title: token
+ *            type: string
+ *      401:
+ *        description: Could not authenticate
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username.
+ *                 example: admin
+ *               password:
+ *                 type: string
+ *                 description: The password.
+ *                 example: password
  */
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
