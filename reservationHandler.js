@@ -8,7 +8,7 @@ const requestListener = (req, res) => {
 
 const server = http.createServer(requestListener);
 
-subscribe("booking", async (msg) => {
+subscribe("bookings", async (msg) => {
   const bookingMessage = JSON.parse(msg);
 
   const booking = new Booking({ ...bookingMessage });

@@ -15,7 +15,10 @@ router.post("/:hotelName/room/:roomId", async (req, res) => {
   const { start, end } = req.body;
   const { hotelName, roomId } = req.params;
 
-  sendMessage({ start, end, hotelName, roomId, user: req.user.username });
+  sendMessage(
+    { start, end, hotelName, roomId, user: req.user.username },
+    "bookings"
+  );
 
   return res.sendStatus(201);
 });
