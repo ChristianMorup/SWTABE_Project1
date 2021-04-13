@@ -7,7 +7,7 @@ namespace BookingSender
 {
     public class MessageQueue
     {
-        private ConnectionFactory _connectionFactory = new ConnectionFactory() {HostName = "rabbitmq"};
+        private ConnectionFactory _connectionFactory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "guest", Password = "guest" };
         private IConnection _connection;
         public void Publish(Booking booking) 
         {

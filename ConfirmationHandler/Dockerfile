@@ -4,4 +4,4 @@ COPY bin/Release/net5.0/publish/ app/
 
 WORKDIR /app
 
-ENTRYPOINT [ "dotnet", "BookingSender.dll" ]
+ENTRYPOINT [ "dotnet", "ConfirmationHandler.dll" ]
