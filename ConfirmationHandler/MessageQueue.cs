@@ -8,30 +8,30 @@ namespace ConfirmationHandler
 {
     public class MessageQueue
     {
-        private ConnectionFactory _connectionFactory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "guest", Password = "guest" };
+        private ConnectionFactory _connectionFactory = new ConnectionFactory() { HostName = "localhost", Port = 5672, UserName = "guest", Password = "guest", RequestedConnectionTimeout = TimeSpan.FromMinutes(2) };
         private IConnection _connection;
 
         public void Subscribe(string queueName, Action<BookingConfirmation> onMessage)
         {
-            using var connection = _connectionFactory.CreateConnection();
+            using (var connection = _connectionFactory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {            
+                channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
-            using var channel = connection.CreateModel();
+                var consumer = new EventingBasicConsumer(channel);
 
-            channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+                consumer.Received += (model, eventArgs) => 
+                {
+                    var body = eventArgs.Body.ToArray();
+                    var bodyString = Encoding.UTF8.GetString(body);
 
-            var consumer = new EventingBasicConsumer(channel);
+                    var bookingConfirmation = JsonConvert.DeserializeObject<BookingConfirmation>(bodyString);
+                    Console.WriteLine($"Received: {bookingConfirmation.RoomId}");
+                    onMessage(bookingConfirmation);
+                };
 
-            consumer.Received += (model, eventArgs) => 
-            {
-                var body = eventArgs.Body.ToArray();
-                var bodyString = Encoding.UTF8.GetString(body);
-
-                var bookingConfirmation = JsonConvert.DeserializeObject<BookingConfirmation>(bodyString);
-                Console.WriteLine($"Received: {bookingConfirmation.RoomId}");
-                onMessage(bookingConfirmation);
-            };
-
-            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+                channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+            }
         }
     }
 

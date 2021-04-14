@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
+using RabbitMQ.Client;
 
 namespace BookingSender
 {
     class Program
     {
         static void Main(string[] args)
-        {
+        {          
             var messageQueue = new MessageQueue();
 
             while (true)

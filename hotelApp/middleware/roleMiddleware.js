@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function hasRole(role) {
+function hasRole(roles) {
   return (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -11,7 +11,7 @@ function hasRole(role) {
     const token = authHeader.split(" ")[1];
 
     jwt.verify(token, "secret", (err, user) => {
-      if (err || user.role !== role) {
+      if (err || !roles.includes(user.role)) {
         console.log(err);
         return res.sendStatus(403);
       }

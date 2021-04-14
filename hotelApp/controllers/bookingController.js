@@ -8,9 +8,7 @@ const roles = require("../roles");
 const { hasRole } = require("../middleware/roleMiddleware");
 const { sendMessage } = require("../messageQueue");
 
-const isManagerFunc = hasRole(roles.Manager);
-
-router.use("/:hotelName/room/:roomId", hasRole(roles.User));
+router.use("/:hotelName/room/:roomId", hasRole([roles.User, roles.Admin]));
 router.post("/:hotelName/room/:roomId", async (req, res) => {
   const { start, end } = req.body;
   const { hotelName, roomId } = req.params;

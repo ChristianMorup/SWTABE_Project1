@@ -7,21 +7,20 @@ namespace BookingSender
 {
     public class MessageQueue
     {
-        private ConnectionFactory _connectionFactory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "guest", Password = "guest" };
-        private IConnection _connection;
+        private ConnectionFactory _connectionFactory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, UserName = "guest", Password = "guest", RequestedConnectionTimeout = TimeSpan.FromMinutes(2) };
         public void Publish(Booking booking) 
         {
             using var connection = _connectionFactory.CreateConnection();
 
             using var channel = connection.CreateModel();
 
-            channel.QueueDeclare(queue: "bookings", durable: false, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueDeclare(queue: "confirmation", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
             var bookingSerialized = JsonConvert.SerializeObject(booking);
 
             var message = Encoding.UTF8.GetBytes(bookingSerialized);
 
-            channel.BasicPublish(exchange: "", routingKey: "bookings", basicProperties: null, body: message);
+            channel.BasicPublish(exchange: "", routingKey: "confirmation", basicProperties: null, body: message);
 
             Console.WriteLine($"Sent booking for room: {booking.RoomId}");
         }

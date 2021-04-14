@@ -46,6 +46,8 @@ services:
     build: ./reservationHandler
   confirmationhandler:
     container_name: confirmationHandler
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
     restart: always
     depends_on:
       - "rabbitmq"
