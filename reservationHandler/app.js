@@ -4,10 +4,6 @@ const Booking = require("./models/booking");
 
 require("./db");
 
-const requestListener = (req, res) => {
-  //something
-};
-
 subscribe("bookings", async (msg) => {
   const bookingMessage = JSON.parse(msg.content.toString("utf8"));
 
@@ -20,6 +16,6 @@ subscribe("bookings", async (msg) => {
   sendMessage({ ...bookingMessage }, "confirmation");
 });
 
-const server = http.createServer(requestListener);
+const server = http.createServer(() => {});
 
 server.listen(3001);
